@@ -379,6 +379,13 @@ console.log(average(ancestry.filter(male).map(age)));
 console.log(average(ancestry.filter(female).map(age)));
 
 
+var byName = {};
+ancestry.forEach(function(person) {
+  byName[person.name] = person;
+})
+
+console.log(byName["Philibert Haverbeke"]);
+
 function reduceAncestors(person, f, defaultValue) {
   function valueFor(person) {
     if (person == null)
@@ -389,3 +396,42 @@ function reduceAncestors(person, f, defaultValue) {
   }
   return valueFor(person);
 }
+
+function sharedDNA(person, fromMother, fromFather) {
+  if (person.name == "Pauwels van Haverbeke")
+    return 1;
+  else
+    return (fromMother + fromFather) / 2;
+}
+
+var ph = byName["Philibert Haverbeke"];
+console.log(reduceAncestors(ph, sharedDNA, 0) / 4);
+
+
+function countAncestors(person, test) {
+  function combine(person, fromMother, fromFather) {
+    var thisOneCounts = test(person);
+    return fromMother + fromFather + (thisOneCounts ? 1 : 0);
+  }
+  return reduceAncestors(person, combine, 0);
+}
+
+function longLivingPercentage(person) {
+  var all = countAncestors(person, function(person) {
+    return true;
+  });
+  var longLiving = countAncestors(person, function(person) {
+    return (person.died - person.born) >= 70;
+  });
+  return longLiving / all;
+}
+
+console.log(longLivingPercentage(byName["Emile Haverbeke"]));
+
+
+var theSet = ["Carel Haverbeke", "Maria van Brussel", "Donald Duck"];
+function isInSet(set, person) {
+  return set.indexOf(person.name) > -1;
+}
+
+console.log(ancestry.filter(isInSet.bind(null, theSet)));
