@@ -435,3 +435,22 @@ function isInSet(set, person) {
 }
 
 console.log(ancestry.filter(isInSet.bind(null, theSet)));
+
+
+function ageDifference(person) {
+  var mother = byName[person.mother];
+  if (mother) {
+    return person.born - mother.born;
+  }
+  else {
+     return 0;
+  }
+}
+
+function aboveZero(val) {
+  return val > 0;
+}
+
+console.log(average(ancestry.map(ageDifference).filter(aboveZero)));
+
+
