@@ -454,3 +454,28 @@ function aboveZero(val) {
 console.log(average(ancestry.map(ageDifference).filter(aboveZero)));
 
 
+function groupBy(arr, f) {
+  groups = {};
+  arr.forEach(function(val) {
+    groupName = f(val);
+    if (!(groupName in groups)) {
+      groups[groupName] = []
+    }
+    groups[groupName].push(val);
+  })
+  return groups;
+}
+
+personByDeadAge = groupBy(ancestry, (a) => Math.ceil(a.died / 100));
+
+function avAge(obj) {
+  avAge = {};
+  for (var cent in obj) {
+    if (obj.hasOwnProperty(cent)) {
+      avAge[cent] = average(obj[cent].map(age));
+    }
+  }
+  return avAge;
+}
+
+console.log(avAge(personByDeadAge));
