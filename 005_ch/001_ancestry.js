@@ -479,3 +479,18 @@ function avAge(obj) {
 }
 
 console.log(avAge(personByDeadAge));
+
+
+function every(arr, f) {
+  return arr.reduce((acc, val) => f(val) && acc, true);
+}
+
+console.log(every([NaN, NaN, NaN], isNaN));
+console.log(every([NaN, NaN, 4], isNaN));
+
+function some(arr, f) {
+  return arr.reduce((acc, val) => f(val) || acc, false);
+}
+
+console.log(some([NaN, 3, 4], isNaN));
+console.log(some([2, 3, 4], isNaN));
