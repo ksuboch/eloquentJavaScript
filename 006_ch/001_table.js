@@ -89,7 +89,7 @@ function TextCell(text) {
   this.text = text.split("\n");
 }
 TextCell.prototype.minWidth = function() {
-  return this.text.map(function(width, line) {
+  return this.text.reduce(function(width, line) {
     return Math.max(width, line.length);
   }, 0);
 };
@@ -105,6 +105,7 @@ TextCell.prototype.draw = function(width, height) {
   return result;
 };
 
+
 // var rows = [];
 // for (var i = 0; i < 5; i++) {
 //   var row = [];
@@ -119,6 +120,7 @@ TextCell.prototype.draw = function(width, height) {
 
 // console.log(drawTable(rows));
 
+
 function UnderlineCell(inner) {
   this.inner = inner;
 };
@@ -126,10 +128,96 @@ UnderlineCell.prototype.minWidth = function() {
   return this.inner.minWidth();
 };
 UnderlineCell.prototype.minHeight = function() {
-  return this.inner.minHeight + 1;
+  return this.inner.minHeight() + 1;
 };
 UnderlineCell.prototype.draw = function(width, height) {
-  return this.inner.draw(width, height - 1)
-    .concat([repeat("-", width)]);
+  return this.inner.draw(width, height - 1).concat([repeat("-", width)]);
 };
 
+function dataTable(data) {
+  var keys = Object.keys(data[0]);
+  var headers = keys.map(function(name) {
+    return new UnderlineCell(new TextCell(name));
+  });
+  var body = data.map(function(row) {
+    return keys.map(function(name) {
+      return new TextCell(String(row[name]));
+    });
+  });
+  return [headers].concat(body);
+}
+
+console.log(drawTable(dataTable(MOUNTAINS)));
+
+
+// var pile = {
+//   elements: ["скорлупа", "кожура", "червяк"],
+//   get height() {
+//     return this.elements.length;
+//   },
+//   set height(value) {
+//     console.log("Игнорируем попытку заменить высоту", value);
+//   }
+// };
+
+// console.log(pile.height);
+
+// pile.height = 100;
+
+
+console.log("\n");
+
+
+// Object.defineProperty(TextCell.prototype, "heightProp", {
+//   get: function() { return this.text.length; }
+// });
+
+// var cell = new TextCell("yes\nno");
+
+// console.log(cell.heightProp)
+
+// cell.heightProp = 100;
+
+// console.log(cell.heightProp)
+
+
+function RTextCell(text) {
+  TextCell.call(this, text);
+}
+RTextCell.prototype = Object.create(TextCell.prototype);
+RTextCell.prototype.draw = function(width, height) {
+  var result = [];
+  for (var i = 0; i < height; i++) {
+    var line = this.text[i] || "";
+    result.push(repeat(" ", width - line.length) + line);
+  }
+  return result;
+}
+
+function dataTable2(data) {
+  var keys = Object.keys(data[0]);
+  var headers = keys.map(function(name) {
+    return new UnderlineCell(new TextCell(name));
+  });
+  var body = data.map(function(row) {
+    return keys.map(function(name) {
+      var value = row[name];
+      if (typeof value == "number")
+        return new RTextCell(String(value));
+      else
+        return new TextCell(String(value));
+    });
+  });
+  return [headers].concat(body);
+}
+
+console.log(drawTable(dataTable2(MOUNTAINS)));
+
+
+console.log("\n");
+
+
+// console.log(new RTextCell("A") instanceof RTextCell);
+// console.log(new RTextCell("A") instanceof TextCell);
+// console.log(new TextCell("A") instanceof RTextCell);
+// console.log([1] instanceof Array);
