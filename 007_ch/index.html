@@ -1,0 +1,18 @@
+<!doctype html>
+<script src="./001_life.js"></script>
+<script src="./animateworld.js"></script>
+
+<body><script>
+animateWorld(new World(
+  ["############",
+   "#     #    #",
+   "#   ~    ~ #",
+   "#  ##      #",
+   "#  ##  o####",
+   "#          #",
+   "############"],
+  {"#": Wall,
+   "~": WallFollower,
+   "o": BouncingCritter}
+));
+</script></body>
