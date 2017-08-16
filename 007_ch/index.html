@@ -3,16 +3,22 @@
 <script src="./animateworld.js"></script>
 
 <body><script>
-animateWorld(new World(
-  ["############",
-   "#     #    #",
-   "#   ~    ~ #",
-   "#  ##      #",
-   "#  ##  o####",
-   "#          #",
-   "############"],
-  {"#": Wall,
-   "~": WallFollower,
-   "o": BouncingCritter}
-));
+var valley = new LifelikeWorld(
+["############################",
+  "#####                 ######",
+  "##   ***                **##",
+  "#   *##**         **  O  *##",
+  "#    ***     O    ##**    *#",
+  "#       O         ##***    #",
+  "#                 ##**     #",
+  "#   O       #*             #",
+  "#*          #**       O    #",
+  "#***        ##**    O    **#",
+  "##****     ###***       *###",
+  "############################"],
+{"#": Wall,
+  "O": PlantEater,
+  "*": Plant}
+);
+animateWorld(valley);
 </script></body>
